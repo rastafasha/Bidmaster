@@ -134,7 +134,8 @@ const AdminDashboard = () => {
             </button>
             <div className="flex items-center space-x-3">
               <img
-                className="h-8 w-8 rounded-full"
+              onClick={() => setShowUserProfileModal(true)}
+                className="h-8 w-8 rounded-full cursor-pointer"
                 src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=256&q=80"
                 alt="User avatar"
               />
