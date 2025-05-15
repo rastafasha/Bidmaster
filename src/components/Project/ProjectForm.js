@@ -62,7 +62,7 @@ const ProjectForm = ({ projectId, onSave, onCancel }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden p-6 max-w-2xl mx-auto">
+    <div className="bg-white rounded-xl overflow-hidden   mx-auto">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">
         {projectId ? 'Editar Proyecto' : 'Nuevo Proyecto'}
       </h2>
@@ -124,9 +124,6 @@ const ProjectForm = ({ projectId, onSave, onCancel }) => {
                 <option value="Infraestructura">Infraestructura</option>
               </select>
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Fecha de Entrega</label>
               <input

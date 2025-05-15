@@ -83,12 +83,12 @@ const PartnerDashboard = ({ partnerId, onLogout }) => {
               >
                 Perfil de Usuario
               </button>
-              <button
+              {/* <button
                 onClick={onLogout}
                 className="text-gray-500 hover:text-gray-700"
               >
                 Cerrar sesión
-              </button>
+              </button> */}
             </div>
 
             {partnerProjects.length > 0 ? (
