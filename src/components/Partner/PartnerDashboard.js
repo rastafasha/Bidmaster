@@ -5,11 +5,14 @@ import ProjectCard from '../ProjectCard';
 import UserProfileForm from '../UserProfileForm';
 import SidebarPartner from './SidebarPartner';
 import TopbarPartner from './TopbarPartner';
+import Calendar from '../Project/Calendar';
 
 const PartnerDashboard = ({ partnerId, onLogout }) => {
   const partner = users.find(u => u.id === partnerId && u.role === 'partner');
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const [currentNav, setCurrentNav] = useState('Dashboard');
+  const [showUserList, setShowUserList] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
 
   // Placeholder for logged-in user profile data
   const loggedInUserProfile = {
@@ -83,6 +86,12 @@ const PartnerDashboard = ({ partnerId, onLogout }) => {
               >
                 Perfil de Usuario
               </button>
+              <button
+                onClick={() => setShowCalendar(!showCalendar)}
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors ml-4"
+              >
+                Calendar
+              </button>
               {/* <button
                 onClick={onLogout}
                 className="text-gray-500 hover:text-gray-700"
@@ -91,7 +100,7 @@ const PartnerDashboard = ({ partnerId, onLogout }) => {
               </button> */}
             </div>
 
-            {partnerProjects.length > 0 ? (
+            {!showCalendar && (partnerProjects.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {partnerProjects.map(project => (
                   <ProjectCard
@@ -106,6 +115,10 @@ const PartnerDashboard = ({ partnerId, onLogout }) => {
               <div className="flex items-center justify-center h-64">
                 <p className="text-gray-500">No hay proyectos asignados</p>
               </div>
+            ))}
+
+            {showCalendar && (
+              <Calendar currentUserId={partnerId} />
             )}
 
             {showUserProfileModal && (
