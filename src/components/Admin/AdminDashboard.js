@@ -19,6 +19,13 @@ const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('');
 
+  const onLogout = () => {
+    // Implement your logout logic here, e.g., clearing auth tokens, redirecting, etc.
+    console.log('Logout clicked');
+    // Example: redirect to login page
+    window.location.href = '/login';
+  };
+
   // Placeholder for logged-in user profile data
   const loggedInUserProfile = {
     firstName: '',
@@ -81,6 +88,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
+      {/* Sidebar */}
       <Sidebar 
         currentNav={currentNav} 
         setCurrentNav={(nav) => {
@@ -94,7 +102,8 @@ const AdminDashboard = () => {
         onShowUserList={() => {
           setShowUserList(true);
           setCurrentNav('Team');
-        }} 
+        }}
+        onLogout={onLogout}
       />
 
       {/* Main content */}

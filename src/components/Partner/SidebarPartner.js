@@ -1,20 +1,19 @@
 import React from 'react';
-import navigation from './navigationData';
-
+import navigationPartner from './NavigationDataPartner';
 const teams = [
   { id: 1, name: 'Heroicons', initials: 'H' },
   { id: 2, name: 'Tailwind Labs', initials: 'T' },
   { id: 3, name: 'Workcation', initials: 'W' }
 ];
 
-const Sidebar = ({ currentNav, setCurrentNav, onShowUserList, onLogout }) => {
+const SidebarPartner = ({ currentNav, setCurrentNav, onShowUserList, onLogout }) => {
   return (
     <div className="flex flex-col w-64 bg-indigo-700 text-indigo-100">
       <div className="flex items-center h-16 px-6 font-bold text-xl border-b border-indigo-600">
-        BidMaster | Malcolm&Asoc
+        BidMaster 
       </div>
       <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-        {navigation.map((item) => (
+        {navigationPartner.map((item) => (
           <button
             key={item.name}
             onClick={() => setCurrentNav(item.name)}
@@ -29,30 +28,6 @@ const Sidebar = ({ currentNav, setCurrentNav, onShowUserList, onLogout }) => {
           </button>
         ))}
 
-        <div className="mt-8">
-          <h3 className="px-3 text-xs font-semibold tracking-wider text-indigo-300 uppercase">
-            Your teams
-          </h3>
-          <div className="mt-1 space-y-1">
-            {teams.map((team) => (
-              <button
-                key={team.id}
-                className="group flex items-center px-3 py-2 text-sm font-medium rounded-md w-full text-left text-indigo-100 hover:bg-indigo-600 hover:text-white"
-              >
-                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-indigo-500 text-xs font-semibold uppercase tracking-wider text-white mr-3">
-                  {team.initials}
-                </span>
-                {team.name}
-              </button>
-            ))}
-            <button
-              onClick={onShowUserList}
-              className="group flex items-center px-3 py-2 text-sm font-medium rounded-md w-full text-left text-indigo-100 hover:bg-indigo-600 hover:text-white mt-4"
-            >
-              Lista de Usuarios
-            </button>
-          </div>
-        </div>
       </nav>
       <div className="flex-shrink-0 p-4 border-t border-indigo-600">
         <button className="group flex items-center text-sm font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600 w-full px-3 py-2">
@@ -74,4 +49,4 @@ const Sidebar = ({ currentNav, setCurrentNav, onShowUserList, onLogout }) => {
   );
 };
 
-export default Sidebar;
+export default SidebarPartner;
