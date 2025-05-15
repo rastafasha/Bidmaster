@@ -62,12 +62,12 @@ const Sidebar = ({ currentNav, setCurrentNav, onShowUserList }) => {
           </svg>
           Settings
         </button>
-        <button className="group flex items-center text-sm font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600 w-full px-3 py-2">
+        <button onClick={onLogout} className="group flex items-center text-sm font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600 w-full px-3 py-2">
           <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="10" />
             <path d="M12 6v6l4 2" />
           </svg>
-          Logout
+          Cerrar sesión
         </button>
       </div>
     </div>
