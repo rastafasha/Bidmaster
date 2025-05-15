@@ -1,11 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ProjectCard from '../ProjectCard';
 import projects from '../../mock/projects';
 import users from '../../mock/users';
+import UserProfileForm from '../UserProfileForm';
 
 const PartnerDashboard = ({ partnerId, onLogout }) => {
   const partner = users.find(u => u.id === partnerId && u.role === 'partner');
+  const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   
+  // Placeholder for logged-in user profile data
+    const loggedInUserProfile = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      skills: '',
+      isAsociado: true,
+      role: 'Asociado Senior',
+      projects: [
+        { name: 'Proyecto A', price: 10000, profitPercentage: 10 },
+        { name: 'Proyecto B', price: 20000, profitPercentage: 15 }
+      ]
+    };
+
   if (!partner) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -18,6 +35,12 @@ const PartnerDashboard = ({ partnerId, onLogout }) => {
     project.partners.includes(partner.partnerCompany)
   );
 
+  const closeOnOverlayClick = (e, closeFunc) => {
+    if (e.target === e.currentTarget) {
+      closeFunc();
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8 flex justify-between items-center">
@@ -25,6 +48,12 @@ const PartnerDashboard = ({ partnerId, onLogout }) => {
           <h1 className="text-3xl font-bold text-gray-900">Proyectos de {partner.partnerCompany}</h1>
           <p className="text-gray-600">Bienvenido, {partner.name}</p>
         </div>
+        <button
+            onClick={() => setShowUserProfileModal(true)}
+            className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+          >
+            Perfil de Usuario
+          </button>
         <button 
           onClick={onLogout}
           className="text-gray-500 hover:text-gray-700"
@@ -47,6 +76,31 @@ const PartnerDashboard = ({ partnerId, onLogout }) => {
       ) : (
         <div className="flex items-center justify-center h-64">
           <p className="text-gray-500">No hay proyectos asignados</p>
+        </div>
+      )}
+
+      {showUserProfileModal && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+          onClick={(e) => closeOnOverlayClick(e, () => setShowUserProfileModal(false))}
+        >
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full relative">
+            <button
+              onClick={() => setShowUserProfileModal(false)}
+              className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
+              aria-label="Cerrar modal"
+            >
+              &#x2715;
+            </button>
+            <UserProfileForm 
+              initialData={loggedInUserProfile}
+              onSave={(data) => {
+                console.log('User profile saved:', data);
+                setShowUserProfileModal(false);
+              }}
+              onCancel={() => setShowUserProfileModal(false)}
+            />
+          </div>
         </div>
       )}
     </div>

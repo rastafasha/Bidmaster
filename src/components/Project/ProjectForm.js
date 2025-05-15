@@ -5,7 +5,7 @@ const ProjectForm = ({ projectId, onSave, onCancel }) => {
   const [formData, setFormData] = useState({
     name: '',
     url: '',
-    urlPdf: '',
+    urlPdf: null,
     type: 'Construcción',
     partners: [],
     deliveryDate: new Date().toISOString().split('T')[0],
@@ -20,6 +20,7 @@ const ProjectForm = ({ projectId, onSave, onCancel }) => {
       if (existingProject) {
         setFormData({
           ...existingProject,
+          urlPdf: null,
           deliveryDate: existingProject.deliveryDate || new Date().toISOString().split('T')[0]
         });
       }
@@ -27,11 +28,23 @@ const ProjectForm = ({ projectId, onSave, onCancel }) => {
   }, [projectId]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value
-    });
+    const { name, value, type, checked, files } = e.target;
+    if (name === 'urlPdf' && files.length > 0) {
+      setFormData({
+        ...formData,
+        urlPdf: files[0]
+      });
+    } else if (type === 'checkbox') {
+      setFormData({
+        ...formData,
+        [name]: checked
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
   };
 
   const handlePartnerToggle = (partner) => {
@@ -82,15 +95,17 @@ const ProjectForm = ({ projectId, onSave, onCancel }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">URL del PDF</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Subir PDF</label>
               <input
-                type="url"
+                type="file"
                 name="urlPdf"
-                value={formData.urlPdf}
+                accept="application/pdf"
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
-                required
+                className="w-full"
               />
+              {formData.urlPdf && (
+                <p className="mt-2 text-sm text-gray-600">Archivo seleccionado: {formData.urlPdf.name}</p>
+              )}
             </div>
           </div>
 
@@ -109,6 +124,9 @@ const ProjectForm = ({ projectId, onSave, onCancel }) => {
                 <option value="Infraestructura">Infraestructura</option>
               </select>
             </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Fecha de Entrega</label>
               <input
@@ -122,6 +140,7 @@ const ProjectForm = ({ projectId, onSave, onCancel }) => {
               />
             </div>
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Asociados</label>
             <div className="space-y-2">
