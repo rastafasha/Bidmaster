@@ -7,6 +7,8 @@ import UserProfileForm from '../UserProfileForm';
 import AdminUserList from './AdminUserList';
 import Sidebar from './Sidebar';
 import Topbar from './Topbar';
+import ApprovedProjectsChart from './ApprovedProjectsChart';
+import EconomicMovementChart from './EconomicMovementChart';
 
 const AdminDashboard = () => {
   const [currentNav, setCurrentNav] = useState('Dashboard');
@@ -166,7 +168,7 @@ const AdminDashboard = () => {
                   onClick={handleNewProject}
                   className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
                 >
-                  + Nuevo Proyecto
+                  + 
                 </button>
                 <button
                   onClick={() => setShowTypeManagerModal(true)}
@@ -182,7 +184,22 @@ const AdminDashboard = () => {
                 </button>
               </div>
 
-              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <ApprovedProjectsChart data={[
+                  { month: 'Enero', approvedProjects: 5 },
+                  { month: 'Febrero', approvedProjects: 8 },
+                  { month: 'Marzo', approvedProjects: 6 },
+                  { month: 'Abril', approvedProjects: 10 },
+                  { month: 'Mayo', approvedProjects: 7 },
+                  { month: 'Junio', approvedProjects: 9 },
+                ]} />
+                <EconomicMovementChart data={[
+                  { category: 'Ingresos', value: 40000 },
+                  { category: 'Gastos', value: 15000 },
+                  { category: 'Inversiones', value: 10000 },
+                  { category: 'Otros', value: 5000 },
+                ]} />
+              </div>
 
               {projectData.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
