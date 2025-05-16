@@ -4,12 +4,12 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 const manifestIcons = [
   {
-    src: './assets/icons/icon-192.png',
+    src: './assets/icons/pwa-192.png',
     sizes: '192x192',
     type: 'image/png',
   },
   {
-    src: './assets/icons/icon-512.png',
+    src: './assets/icons/pwa-512.png',
     sizes: '512x512',
     type: 'image/png',
   }
@@ -25,6 +25,13 @@ export default defineConfig({
         name: 'BidMaster',
         short_name: 'Bidmaster',
         icons: manifestIcons,
+      },
+      workbox: {
+        clientsClaim: true,
+        skipWaiting: true
+      },
+      devOptions: {
+        enabled: true
       }
     })
   ],
