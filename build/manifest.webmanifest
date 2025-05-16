@@ -1,12 +1,12 @@
 {
-    "name": "BidMaster",
-    "short_name": "BidMaster",
-    "description": "App para administrar ofertas de trabajo",
-    "theme_color": "#1976d2",
-    "background_color": "#fafafa",
-    "display": "standalone",
-    "scope": "./",
-    "start_url": "./",
+
+
+    "background_color": "#f2f2f2",
+  "categories": ["production", "work"],
+  "description": "App para administrar ofertas de trabajo",
+  "dir": "ltr",
+  "display_override": ["standalone", "fullscreen"],
+  "display": "standalone",
     "icons": [
       
       {
@@ -110,6 +110,14 @@
         "type": "image/png",
         "purpose": "maskable any"
     }
-    ]
+    ],
+    "lang": "es-MX",
+   "name": "BidMaster PWA",
+    "short_name": "BidMaster",
+  "orientation": "portrait",
+  "prefer_related_application": false,
+  "scope": "/",
+  "start_url": "/",
+  "theme_color": "orange"
   }
   
