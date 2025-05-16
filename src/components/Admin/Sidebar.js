@@ -47,7 +47,7 @@ const Sidebar = ({ currentNav, setCurrentNav, onShowUserList, onLogout }) => {
   return (
     <div className="flex flex-col w-64 bg-indigo-700 text-indigo-100">
       <div className="flex items-center h-16 px-6 font-bold text-xl border-b border-indigo-600">
-        BidMaster | Malcolm&Asoc
+        BidMaster
       </div>
       <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
         {navigation.map((item) => (
