@@ -9,6 +9,7 @@ import Sidebar from './Sidebar';
 import Topbar from './Topbar';
 import ApprovedProjectsChart from './ApprovedProjectsChart';
 import EconomicMovementChart from './EconomicMovementChart';
+import Projects from './Projects';
 
 const AdminDashboard = () => {
   const [currentNav, setCurrentNav] = useState('Dashboard');
@@ -150,7 +151,7 @@ const AdminDashboard = () => {
                 src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=256&q=80"
                 alt="User avatar"
               />
-              <span className="text-gray-700 font-medium">Tom Cook</span>
+              {/* <span className="text-gray-700 font-medium">Tom Cook</span> */}
             </div>
           </div>
         </header>
@@ -161,6 +162,8 @@ const AdminDashboard = () => {
         <main className="flex-1 p-6 overflow-y-auto">
           {showUserList ? (
             <AdminUserList />
+          ) : currentNav === 'Projects' ? (
+            <Projects />
           ) : (
             <>
               <div className="mb-8 flex justify-end items-center">
