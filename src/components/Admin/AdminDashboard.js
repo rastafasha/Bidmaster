@@ -117,6 +117,7 @@ const AdminDashboard = () => {
         {/* Top bar */}
 
         <header className="flex items-center justify-between h-16 px-6 bg-white border-b border-gray-200">
+
           <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
             <div className="md:col-span-2">
               <input
