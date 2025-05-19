@@ -5,7 +5,7 @@ import PartnerDashboard from './components/Partner/PartnerDashboard';
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [view, setView] = useState('auth'); // 'auth', 'admin', 'partner'
+  const [view, setView] = useState('auth'); // 'auth', 'admin', 'partner', 'login-email'
 
   const handleLoginSuccess = (user) => {
     setCurrentUser(user);
@@ -23,8 +23,9 @@ const App = () => {
         return <AdminDashboard onLogout={handleLogout} />;
       case 'partner':
         return <PartnerDashboard partnerId={currentUser.id} onLogout={handleLogout} />;
+     
       default:
-        return <AuthWrapper onLoginSuccess={handleLoginSuccess} />;
+        return <AuthWrapper onLoginSuccess={handleLoginSuccess} onChangeView={setView} />;
     }
   };
 
