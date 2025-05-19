@@ -72,7 +72,7 @@ const AdminDashboard = () => {
 
   const handleSaveProject = (project) => {
     if (currentProjectId) {
-      setProjectData(prev => 
+      setProjectData(prev =>
         prev.map(p => p.id === currentProjectId ? { ...project, id: currentProjectId } : p)
       );
     } else {
@@ -95,8 +95,8 @@ const AdminDashboard = () => {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <Sidebar 
-        currentNav={currentNav} 
+      <Sidebar
+        currentNav={currentNav}
         setCurrentNav={(nav) => {
           setCurrentNav(nav);
           if (nav === 'Team') {
@@ -104,7 +104,7 @@ const AdminDashboard = () => {
           } else {
             setShowUserList(false);
           }
-        }} 
+        }}
         onShowUserList={() => {
           setShowUserList(true);
           setCurrentNav('Team');
@@ -117,55 +117,55 @@ const AdminDashboard = () => {
         {/* Top bar */}
 
         <header className="flex items-center justify-between h-16 px-6 bg-white border-b border-gray-200">
-      <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
-        <div className="md:col-span-2">
-          <input
-            type="text"
-            placeholder="Buscar por nombre..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
-          />
-        </div>
-        <div>
-          <select
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
-          >
-            <option value="">Todos los tipos</option>
-            <option value="Construcción">Construcción</option>
-            <option value="Diseño Urbano">Diseño Urbano</option>
-            <option value="Tecnología">Tecnología</option>
-            <option value="Infraestructura">Infraestructura</option>
-          </select>
-        </div>
-      </div>
-      <div className="flex items-center space-x-4">
-        <LanguageSelector />
-        <button className="p-2 rounded-full hover:bg-gray-100" aria-label="Notifications">
-          <svg
-            className="h-6 w-6 text-gray-600"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            viewBox="0 0 24 24"
-          >
-            <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-          </svg>
-        </button>
-        <div className="flex items-center space-x-3">
-          <img
-            className="h-8 w-8 rounded-full"
-            src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=256&q=80"
-            alt="User avatar"
-          />
-          <span className="text-gray-700 font-medium">Tom Cook</span>
-        </div>
-      </div>
-    </header>
+          <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
+            <div className="md:col-span-2">
+              <input
+                type="text"
+                placeholder="Buscar por nombre..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+              />
+            </div>
+            <div>
+              <select
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+              >
+                <option value="">Todos los tipos</option>
+                <option value="Construcción">Construcción</option>
+                <option value="Diseño Urbano">Diseño Urbano</option>
+                <option value="Tecnología">Tecnología</option>
+                <option value="Infraestructura">Infraestructura</option>
+              </select>
+            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <LanguageSelector />
+            <button className="p-2 rounded-full hover:bg-gray-100" aria-label="Notifications">
+              <svg
+                className="h-6 w-6 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                viewBox="0 0 24 24"
+              >
+                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+            </button>
+            <div className="flex items-center space-x-3">
+              <img
+                className="h-8 w-8 rounded-full"
+                src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=256&q=80"
+                alt="User avatar"
+              />
+              {/* <span className="text-gray-700 font-medium">Tom Cook</span> */}
+            </div>
+          </div>
+        </header>
 
 
 
@@ -182,7 +182,7 @@ const AdminDashboard = () => {
                   onClick={handleNewProject}
                   className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
                 >
-                  + 
+                  +
                 </button>
                 <button
                   onClick={() => setShowTypeManagerModal(true)}
@@ -221,7 +221,7 @@ const AdminDashboard = () => {
                     <ProjectCard
                       key={project.id}
                       project={project}
-                      onTogglePresentation={() => {}}
+                      onTogglePresentation={() => { }}
                       showAdminControls={true}
                       onEdit={() => handleEditProject(project.id)}
                       onDelete={() => handleDeleteProject(project.id)}
@@ -230,7 +230,7 @@ const AdminDashboard = () => {
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <p className="text-gray-500">No se encontraron proyectos que coincidan con la búsqueda</p>
+                  <p className="text-gray-500">{t('No se encontraron proyectos que coincidan con la búsqueda')}</p>
                 </div>
               )}
             </>

@@ -80,8 +80,8 @@ const PartnerDashboard = ({ partnerId, onLogout }) => {
           <div className="container mx-auto px-4 py-8">
             <div className="mb-8 flex justify-between items-center">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Proyectos de {partner.partnerCompany}</h1>
-                <p className="text-gray-600">Bienvenido, {partner.name}</p>
+                <h1 className="text-3xl font-bold text-gray-900">{t('Proyectos de')} {partner.partnerCompany}</h1>
+                <p className="text-gray-600">{t('Bienvenido')}, {partner.name}</p>
               </div>
               <button
                 onClick={() => setShowUserProfileModal(true)}
@@ -116,7 +116,7 @@ const PartnerDashboard = ({ partnerId, onLogout }) => {
               </div>
             ) : (
               <div className="flex items-center justify-center h-64">
-                <p className="text-gray-500">No hay proyectos asignados</p>
+                <p className="text-gray-500">{t('No hay proyectos asignados')}</p>
               </div>
             ))}
 

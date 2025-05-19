@@ -30,5 +30,9 @@
   "Actualizar": "Update",
   "Editar Proyecto": "Edit Project",
   "Crear Proyecto": "Create Project",
-  "Nuevo Proyecto": "New Project"
+  "Nuevo Proyecto": "New Project",
+  "Bienvenido": "Welcome",
+  "Proyectos de": "Projects of",
+  "No hay proyectos asignados": "No projects assigned",
+  "No se encontraron proyectos que coincidan con la búsqueda": "No projects found matching the search"
 }
