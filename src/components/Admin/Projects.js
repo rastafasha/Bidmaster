@@ -56,7 +56,7 @@ const Projects = () => {
   };
 
   return (
-    <div className="p-6 overflow-y-auto">
+    <div className="p-6  ">
       <div className="mb-8 flex justify-end items-center">
         <button
           onClick={handleNewProject}
@@ -112,10 +112,10 @@ const Projects = () => {
 
       {showProjectFormModal && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start overflow-y-auto z-50 p-4 sm:p-6 min-h-screen"
           onClick={(e) => closeOnOverlayClick(e, () => setShowProjectFormModal(false))}
         >
-          <div className="bg-white rounded-lg shadow-lg p-6 max-w-4xl w-full relative">
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-4xl w-full relative max-h-[90vh] overflow-y-auto max-h-screen">
             <button
               onClick={() => setShowProjectFormModal(false)}
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"

@@ -7,10 +7,9 @@ const teams = [
   { id: 3, name: 'Workcation', initials: 'W' }
 ];
 
-const Sidebar = ({ currentNav, setCurrentNav, onShowUserList, onLogout }) => {
+const Sidebar = ({ currentNav, setCurrentNav, onShowUserList, onLogout, isOpen, setIsOpen }) => {
 
   const [isReadyForInstall, setIsReadyForInstall] = useState(false);
-  const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     window.addEventListener("beforeinstallprompt", (event) => {
@@ -33,9 +32,21 @@ const Sidebar = ({ currentNav, setCurrentNav, onShowUserList, onLogout }) => {
 
   return (
     <div className={`flex flex-col bg-indigo-700 text-indigo-100 transition-width duration-300 ease-in-out
-      ${isOpen ? 'w-64' : 'w-16'}`}>
+      ${isOpen ? 'w-64' : 'w-0'}`}>
       <div className="flex items-center h-16 px-2 font-bold text-xl border-b border-indigo-600">
-        <button
+        <svg
+            className="h-6 w-6 text-indigo-100"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            viewBox="0 0 24 24"
+          >
+            <path d="M6 18L18 6M6 6l12 12" />
+            
+          </svg>
+        {/* <button
           onClick={() => setIsOpen(!isOpen)}
           className="p-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-white"
           aria-label="Toggle sidebar"
@@ -55,8 +66,8 @@ const Sidebar = ({ currentNav, setCurrentNav, onShowUserList, onLogout }) => {
               <path d="M4 6h16M4 12h16M4 18h16" />
             )}
           </svg>
-        </button>
-        {isOpen && <span className="ml-4">BidMaster</span>}
+        </button> */}
+        {/* {isOpen && <span className="ml-4">BidMaster</span>} */}
       </div>
       <nav className="flex-1 px-1 py-6 space-y-1 overflow-y-auto">
         {navigation.map((item) => (
