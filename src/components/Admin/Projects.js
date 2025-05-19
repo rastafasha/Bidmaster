@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import ProjectCard from '../ProjectCard';
 import ProjectForm from '../Project/ProjectForm';
 import projects from '../../mock/projects';
-
+import { useTranslation } from 'react-i18next';
 const Projects = () => {
   const [projectData, setProjectData] = useState(projects);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('');
   const [showProjectFormModal, setShowProjectFormModal] = useState(false);
   const [currentProjectId, setCurrentProjectId] = useState(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (searchTerm || filterType) {
@@ -62,7 +63,7 @@ const Projects = () => {
           onClick={handleNewProject}
           className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
         >
-          + Nuevo Proyecto
+          + {t('Nuevo Proyecto')}
         </button>
       </div>
 

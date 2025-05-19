@@ -1,12 +1,13 @@
 import React from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-
+import { useTranslation } from 'react-i18next';
 const COLORS = ['#4F46E5', '#6366F1', '#A5B4FC', '#C7D2FE'];
 
 const EconomicMovementChart = ({ data }) => {
+  const { t } = useTranslation();
   return (
     <div className="bg-white p-4 rounded-lg shadow-md">
-      <h2 className="text-lg font-semibold mb-4">Movimiento Económico del Año</h2>
+      <h2 className="text-lg font-semibold mb-4">{t('Movimiento Económico del Año')}</h2>
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
           <Pie
