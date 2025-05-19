@@ -6,6 +6,7 @@ import UserProfileForm from '../UserProfileForm';
 import SidebarPartner from './SidebarPartner';
 import TopbarPartner from './TopbarPartner';
 import Calendar from '../Project/Calendar';
+import { useTranslation } from 'react-i18next';
 
 const PartnerDashboard = ({ partnerId, onLogout }) => {
   const partner = users.find(u => u.id === partnerId && u.role === 'partner');
@@ -13,6 +14,8 @@ const PartnerDashboard = ({ partnerId, onLogout }) => {
   const [currentNav, setCurrentNav] = useState('Dashboard');
   const [showUserList, setShowUserList] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
+  const { t } = useTranslation();
+  
 
   // Placeholder for logged-in user profile data
   const loggedInUserProfile = {
@@ -84,13 +87,13 @@ const PartnerDashboard = ({ partnerId, onLogout }) => {
                 onClick={() => setShowUserProfileModal(true)}
                 className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
               >
-                Perfil de Usuario
+                {t('Perfil de Usuario')}
               </button>
               <button
                 onClick={() => setShowCalendar(!showCalendar)}
                 className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors ml-4"
               >
-                Calendar
+                {t('Calendar')}
               </button>
               {/* <button
                 onClick={onLogout}

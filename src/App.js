@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import AuthWrapper from './components/Auth/AuthWrapper';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import PartnerDashboard from './components/Partner/PartnerDashboard';
+import './i18n';
+import LanguageSelector from './components/LanguageSelector';
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -28,8 +30,11 @@ const App = () => {
     }
   };
 
+
+
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* <LanguageSelector /> */}
       {renderView()}
     </div>
   );

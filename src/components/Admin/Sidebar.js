@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import navigation from './navigationData';
+import { useTranslation } from 'react-i18next';
 
 const teams = [
   { id: 1, name: 'Heroicons', initials: 'H' },
@@ -8,6 +9,7 @@ const teams = [
 ];
 
 const Sidebar = ({ currentNav, setCurrentNav, onShowUserList, onLogout }) => {
+  const { t } = useTranslation();
 
   const [isReadyForInstall, setIsReadyForInstall] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
@@ -56,7 +58,7 @@ const Sidebar = ({ currentNav, setCurrentNav, onShowUserList, onLogout }) => {
             )}
           </svg>
         </button>
-        {isOpen && <span className="ml-4">BidMaster</span>}
+        {isOpen && <span className="ml-4">{t('BidMaster')}</span>}
       </div>
       <nav className="flex-1 px-1 py-6 space-y-1 overflow-y-auto">
         {navigation.map((item) => (
@@ -71,10 +73,10 @@ const Sidebar = ({ currentNav, setCurrentNav, onShowUserList, onLogout }) => {
           >
             <span className="mr-3 flex-shrink-0">{item.icon}</span>
             {isOpen ? (
-              item.name
+              t(item.name)
             ) : (
               <span className="absolute left-full ml-2 w-max max-w-xs rounded-md bg-indigo-900 px-2 py-1 text-xs font-semibold text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                {item.name}
+                {t(item.name)}
               </span>
             )}
           </button>
@@ -83,7 +85,7 @@ const Sidebar = ({ currentNav, setCurrentNav, onShowUserList, onLogout }) => {
         <div className="mt-8">
           <h3 className={`px-3 text-xs font-semibold tracking-wider text-indigo-300 uppercase
             ${isOpen ? '' : 'hidden'}`}>
-            Your teams
+            {t('Your teams')}
           </h3>
           <div className="mt-1 space-y-1">
             {teams.map((team) => (
@@ -114,10 +116,10 @@ const Sidebar = ({ currentNav, setCurrentNav, onShowUserList, onLogout }) => {
                 </svg>
               </span>
               {isOpen ? (
-                'Lista de Usuarios'
+                t('User List')
               ) : (
                 <span className="absolute left-full ml-2 w-max max-w-xs rounded-md bg-indigo-900 px-2 py-1 text-xs font-semibold text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                  Lista de Usuarios
+                  {t('User List')}
                 </span>
               )}
             </button>
@@ -131,10 +133,10 @@ const Sidebar = ({ currentNav, setCurrentNav, onShowUserList, onLogout }) => {
             <path d="M12 6v6l4 2" />
           </svg>
           {isOpen ? (
-            'Settings'
+            t('Settings')
           ) : (
             <span className="absolute left-full ml-2 w-max max-w-xs rounded-md bg-indigo-900 px-2 py-1 text-xs font-semibold text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-              Settings
+              {t('Settings')}
             </span>
           )}
         </button>
@@ -145,10 +147,10 @@ const Sidebar = ({ currentNav, setCurrentNav, onShowUserList, onLogout }) => {
               <path d="M12 6v6l4 2" />
             </svg>
             {isOpen ? (
-              'Install App'
+              t('Install App')
             ) : (
               <span className="absolute left-full ml-2 w-max max-w-xs rounded-md bg-indigo-900 px-2 py-1 text-xs font-semibold text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                Install App
+                {t('Install App')}
               </span>
             )}
           </button>
@@ -159,10 +161,10 @@ const Sidebar = ({ currentNav, setCurrentNav, onShowUserList, onLogout }) => {
             <path d="M12 6v6l4 2" />
           </svg>
           {isOpen ? (
-            'Cerrar sesión'
+            t('Logout')
           ) : (
             <span className="absolute left-full ml-2 w-max max-w-xs rounded-md bg-indigo-900 px-2 py-1 text-xs font-semibold text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-              Cerrar sesión
+              {t('Logout')}
             </span>
           )}
         </button>
