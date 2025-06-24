@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import projects from '../../mock/projects';
-import users from '../../mock/users';
+// import projects from '../../mock/projects';
+// import users from '../../mock/users';
+import { useProjects } from '../../context/ProjectContext';
+import { useUsers } from '../../context/UserContext';
 import ProjectCard from '../ProjectCard';
 import UserProfileForm from '../UserProfileForm';
 import SidebarPartner from './SidebarPartner';
@@ -8,6 +10,8 @@ import TopbarPartner from './TopbarPartner';
 import Calendar from '../Project/Calendar';
 
 const PartnerDashboard = ({ partnerId, onLogout }) => {
+  const { projects, getProject, getProjects, updateProject, createProject } = useProjects();
+  const { users, getUsers, updateUser } = useUsers();
   const partner = users.find(u => u.id === partnerId && u.role === 'partner');
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const [currentNav, setCurrentNav] = useState('Dashboard');
@@ -22,7 +26,7 @@ const PartnerDashboard = ({ partnerId, onLogout }) => {
     phone: '',
     skills: '',
     isAsociado: true,
-    role: 'Asociado Senior',
+    role: 'partner',
     projects: [
       { name: 'Proyecto A', price: 10000, profitPercentage: 10 },
       { name: 'Proyecto B', price: 20000, profitPercentage: 15 }

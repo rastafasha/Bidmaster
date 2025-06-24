@@ -78,8 +78,9 @@ export function ProjectTypeProvider({ children }) {
     }
 
     return (
-        <ProjectContext.Provider value={{
+        <ProjectTypeContext.Provider value={{
             projectTypes,
+            setProjectTypes,
             createProjectType,
             getProjectTypes,
             getProjectTypesByUSer,
@@ -90,6 +91,6 @@ export function ProjectTypeProvider({ children }) {
             
         }}>
             {children}
-        </ProjectContext.Provider>
+        </ProjectTypeContext.Provider>
     )
 }

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import projects from '../mock/projects';
+// import projects from '../mock/projects';
+import { useProjects } from '../../context/ProjectContext';
 import ProjectCard from './ProjectCard';
 
 const ProjectList = () => {
+  const { projects, getProject, getProjects, updateProject, createProject } = useProjects();
   const [projectData, setProjectData] = useState(projects);
 
   const togglePresentation = (projectId) => {

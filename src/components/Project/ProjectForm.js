@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import projects from '../../mock/projects';
+// import projects from '../../mock/projects';
+import { useProjects } from '../../context/ProjectContext';
 import './StyleProjectform.css';
+
 const ProjectForm = ({ projectId, onSave, onCancel }) => {
+  const { projects, getProject, getProjects, updateProject, createProject } = useProjects();
+
   const [formData, setFormData] = useState({
     name: '',
     url: '',
@@ -17,9 +21,11 @@ const ProjectForm = ({ projectId, onSave, onCancel }) => {
   useEffect(() => {
     if (projectId) {
       const existingProject = projects.find(p => p.id === projectId);
+      console.log('existingProject', existingProject);
       if (existingProject) {
         setFormData({
           ...existingProject,
+          id: existingProject.id,
           urlPdf: null,
           deliveryDate: existingProject.deliveryDate || new Date().toISOString().split('T')[0]
         });
@@ -64,9 +70,9 @@ const ProjectForm = ({ projectId, onSave, onCancel }) => {
   return (
     //modal
     <div className="bg-white rounded-xl  overflow-y-auto modalForm">
-      {/* <h2 className="text-2xl font-bold text-gray-800 mb-6">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">
         {projectId ? 'Editar Proyecto' : 'Nuevo Proyecto'}
-      </h2> */}
+      </h2>
       
       <form onSubmit={handleSubmit}>
         <div className="space-y-6">

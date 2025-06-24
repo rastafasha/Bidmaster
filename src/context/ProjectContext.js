@@ -1,5 +1,7 @@
 import { createContext, useContext, useState } from "react";
-import {createProjectRequest, deleteProjectRequest, 
+import {
+    createProjectRequest, 
+    deleteProjectRequest, 
     getProjectsRequest, 
     getProjectsUserRequest,
     getProjectRequest,
@@ -23,7 +25,7 @@ export function ProjectProvider({ children }) {
        try {
         const res = await getProjectsRequest();
         setProjects(res.data)
-        console.log(res);
+        // console.log(res);
        } catch (error) {
             console.log(error);
        }
@@ -32,7 +34,7 @@ export function ProjectProvider({ children }) {
     const getProjectsByUSer = async (id) =>{
        try {
         const res = await getProjectsUserRequest(id);
-        console.log(res);
+        // console.log(res);
         setProjects(res.data)
        } catch (error) {
             if(error.status === 400){
@@ -44,8 +46,13 @@ export function ProjectProvider({ children }) {
     }
 
     const createProject = async (task) =>{
-        const res = await createProjectRequest(task);
-        console.log(res);
+        try {
+            const res = await createProjectRequest(task);
+            setProjects(prev => [...prev, res.data]);
+            return res.data;
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const deleteProject = async(id)=>{
@@ -62,6 +69,7 @@ export function ProjectProvider({ children }) {
     const getProject = async(id)=>{
         try {
             const res = await getProjectRequest(id);
+            console.log(res);
             return res.data;
         } catch (error) {
             console.log(error);
@@ -71,7 +79,8 @@ export function ProjectProvider({ children }) {
     const updateProject = async (id, task) =>{
         try {
             const res = await updateProjectRequest(id, task);
-            console.log(res);
+            setProjects(prev => prev.map(p => p.id === id ? res.data : p));
+            return res.data;
         } catch (error) {
             console.log(error);
         }

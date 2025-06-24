@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import ProjectCard from '../ProjectCard';
 import ProjectForm from '../Project/ProjectForm';
-import projects from '../../mock/projects';
+// import projects from '../../mock/projects';
+
+import { useProjects } from '../../context/ProjectContext';
 
 const Projects = () => {
+  const { projects, getProjects,  getProject, updateProject, createProject } = useProjects();
   const [projectData, setProjectData] = useState(projects);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('');
@@ -17,9 +20,9 @@ const Projects = () => {
         const matchesType = filterType ? project.type === filterType : true;
         return matchesSearch && matchesType;
       });
-      setProjectData(filtered);
+      getProjects(filtered);
     } else {
-      setProjectData(projects);
+      getProjects(projects);
     }
   }, [searchTerm, filterType]);
 
@@ -33,14 +36,23 @@ const Projects = () => {
     setShowProjectFormModal(true);
   };
 
-  const handleSaveProject = (project) => {
+  const handleSaveProject = async (project) => {
     if (currentProjectId) {
-      setProjectData(prev => 
-        prev.map(p => p.id === currentProjectId ? { ...project, id: currentProjectId } : p)
-      );
+      try {
+        await updateProject(currentProjectId, project);
+        setProjectData(prev => 
+          prev.map(p => p.id === currentProjectId ? { ...project, id: currentProjectId } : p)
+        );
+      } catch (error) {
+        console.error('Error updating project:', error);
+      }
     } else {
-      const newId = Math.max(...projectData.map(p => p.id)) + 1;
-      setProjectData(prev => [...prev, { ...project, id: newId }]);
+      try {
+        const newProject = await createProject(project);
+        setProjectData(prev => [...prev, newProject]);
+      } catch (error) {
+        console.error('Error creating project:', error);
+      }
     }
     setShowProjectFormModal(false);
   };
@@ -93,7 +105,7 @@ const Projects = () => {
 
       {projectData.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projectData.map(project => (
+          {projectData.filter(Boolean).map(project => (
             <ProjectCard
               key={project.id}
               project={project}

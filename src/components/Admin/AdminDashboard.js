@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ProjectCard from '../ProjectCard';
 import ProjectForm from '../Project/ProjectForm';
-import projects from '../../mock/projects';
+// import projects from '../../mock/projects';
 import ProjectTypeManager from './ProjectTypeManager';
 import UserProfileForm from '../UserProfileForm';
 import AdminUserList from './AdminUserList';
@@ -12,6 +12,7 @@ import EconomicMovementChart from './EconomicMovementChart';
 import Projects from './Projects';
 import { useUsers } from '../../context/UserContext';
 import { useAuth } from '../../context/AuthContext';
+import { useProjects } from '../../context/ProjectContext';
 
 const AdminDashboard = () => {
   const { users } = useUsers();
@@ -23,6 +24,8 @@ const AdminDashboard = () => {
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const [showUserList, setShowUserList] = useState(false);
   const [currentProjectId, setCurrentProjectId] = useState(null);
+  
+const { projects, getProject, getProjects, createProject, updateProject } = useProjects();
   const [projectData, setProjectData] = useState(projects);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('');
@@ -57,9 +60,9 @@ const AdminDashboard = () => {
         const matchesType = filterType ? project.type === filterType : true;
         return matchesSearch && matchesType;
       });
-      setProjectData(filtered);
+      getProjects(filtered);
     } else {
-      setProjectData(projects);
+      getProjects(projects);
     }
   }, [searchTerm, filterType]);
 
@@ -73,14 +76,23 @@ const AdminDashboard = () => {
     setShowProjectFormModal(true);
   };
 
-  const handleSaveProject = (project) => {
+  const handleSaveProject = async (project) => {
     if (currentProjectId) {
-      setProjectData(prev => 
-        prev.map(p => p.id === currentProjectId ? { ...project, id: currentProjectId } : p)
-      );
+      try {
+        await updateProject(currentProjectId, project);
+        setProjectData(prev => 
+          prev.map(p => p.id === currentProjectId ? { ...project, id: currentProjectId } : p)
+        );
+      } catch (error) {
+        console.error('Error updating project:', error);
+      }
     } else {
-      const newId = Math.max(...projectData.map(p => p.id)) + 1;
-      setProjectData(prev => [...prev, { ...project, id: newId }]);
+      try {
+        const newProject = await createProject(project);
+        setProjectData(prev => [...prev, newProject]);
+      } catch (error) {
+        console.error('Error creating project:', error);
+      }
     }
     setShowProjectFormModal(false);
   };

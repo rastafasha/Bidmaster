@@ -3,7 +3,9 @@ import AuthWrapper from './components/Auth/AuthWrapper';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import PartnerDashboard from './components/Partner/PartnerDashboard';
 import { UserProvider } from './context/UserContext';
+import { ProjectProvider } from './context/ProjectContext';
 import { AuthProvider } from './context/AuthContext';
+import { ProjectTypeProvider } from './context/ProjectTypeContext';
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -40,9 +42,13 @@ const renderView = () => {
   return (
     <AuthProvider>
       <UserProvider>
+      <ProjectProvider>
+      <ProjectTypeProvider>
         <div className="min-h-screen bg-gray-50">
           {renderView()}
         </div>
+      </ProjectTypeProvider>
+      </ProjectProvider>
       </UserProvider>
     </AuthProvider>
   );

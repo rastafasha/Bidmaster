@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
+import { useProjectTypes } from '../../context/ProjectTypeContext';
 
 const ProjectTypeManager = () => {
-  const [projectTypes, setProjectTypes] = useState([
-    'Construcción',
-    'Diseño Urbano',
-    'Tecnología',
-    'Infraestructura'
-  ]);
+const { projectTypes, setProjectTypes, createProjectTypeRequest, deleteProjectTypeRequest, 
+    getProjectTypesRequest, 
+    getProjectTypesUserRequest,
+    getProjectTypeRequest,
+    updateProjectTypeRequest } = useProjectTypes();
+  // const [projectTypes, setProjectTypes] = useState([
+  //   'Construcción',
+  //   'Diseño Urbano',
+  //   'Tecnología',
+  //   'Infraestructura'
+  // ]);
   const [newType, setNewType] = useState('');
   const [editIndex, setEditIndex] = useState(null);
   const [editValue, setEditValue] = useState('');
