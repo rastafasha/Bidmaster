@@ -4,9 +4,8 @@ import PhoneVerification from './PhoneVerification';
 import users from '../../mock/users';
 import { useNavigate } from "react-router-dom";
 import EmailLogin from './EmailLogin';
-
-
 import EmailRegister from './EmailRegister';
+import { AuthProvider } from '../../context/AuthContext';
 
 const AuthWrapper = ({ onLoginSuccess }) => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -39,80 +38,87 @@ const AuthWrapper = ({ onLoginSuccess }) => {
 
   if (authStep === 'register') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-md">
-          <EmailRegister />
-          <button
-            className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md"
-            onClick={() => setAuthStep('social')}
-          >
-            Back to Login
-          </button>
+      <AuthProvider>
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-md">
+            <EmailRegister />
+            <button
+              className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md"
+              onClick={() => setAuthStep('social')}
+            >
+              Back to Login
+            </button>
+          </div>
         </div>
-      </div>
+      </AuthProvider>
     );
   }
 
   if (authStep === 'login') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-md">
-          <EmailLogin 
-            email={tempUser?.phone} 
-            password={tempUser?.password} 
-            onVerify={handlePhoneVerify} 
-          />
-          <button
-            className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md"
-            onClick={() => setAuthStep('social')}
-          >
-            Back 
-          </button>
+      <AuthProvider>
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-md">
+            <EmailLogin 
+              email={tempUser?.phone} 
+              password={tempUser?.password} 
+              onVerify={handlePhoneVerify} 
+              onLogin={onLoginSuccess}
+            />
+            <button
+              className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md"
+              onClick={() => setAuthStep('social')}
+            >
+              Back 
+            </button>
+          </div>
         </div>
-      </div>
+      </AuthProvider>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-md">
-        <h2 className="text-2xl font-bold text-center text-gray-900 mb-6">
-          {authStep === 'social' ? 'Iniciar sesión' : 'Verificar teléfono'}
-        </h2>
-        
-        {authStep === 'social' ? (
-          <SocialLogin onLogin={handleSocialLogin} />
-        ) : (
-          <PhoneVerification 
-            phone={tempUser?.phone} 
-            onVerify={handlePhoneVerify} 
-          >
-            
-            </PhoneVerification>
+    <AuthProvider>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-md">
+          <h2 className="text-2xl font-bold text-center text-gray-900 mb-6">
+            {authStep === 'social' ? 'Iniciar sesión' : 'Verificar teléfono'}
+          </h2>
           
-        )}
-        <p className='text-center'>-or-</p>
-        
-        {/* {authStep === 'login' ? (
-          <EmailLogin onLogin={handleEmailLogin} />
-        ) : (
-          <EmailLogin 
-            email={tempUser?.phone} 
-            password={tempUser?.password} 
-            onVerify={handlePhoneVerify} 
-          />
-        )} */}
+          {authStep === 'social' ? (
+            <SocialLogin onLogin={handleSocialLogin} />
+          ) : (
+            <PhoneVerification 
+              phone={tempUser?.phone} 
+              onVerify={handlePhoneVerify} 
+            >
+              
+              </PhoneVerification>
+            
+          )}
+          <p className='text-center'>-or-</p>
+          
+          {/* {authStep === 'login' ? (
+            <EmailLogin onLogin={handleEmailLogin} />
+          ) : (
+            <EmailLogin 
+              email={tempUser?.phone} 
+              password={tempUser?.password} 
+              onVerify={handlePhoneVerify} 
+            />
+          )} */}
 
-         <button
-          className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md"
-          onClick={() => setAuthStep('login')}
-        >Login Email</button>
-        <button
-          className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md"
-          onClick={() => setAuthStep('register')}
-        >Register Email</button>
+           <button
+            className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md"
+            onClick={() => setAuthStep('login')}
+          >Login Email</button>
+          <button
+            className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md"
+            onClick={() => setAuthStep('register')}
+          >Register Email</button>
+        </div>
       </div>
-    </div>
+    </AuthProvider>
   );
 };
 

@@ -1,7 +1,6 @@
 import React from 'react';
-// import { useAuth } from "../context/AuthContex";
+import { useAuth } from "../../context/AuthContext";
 import { useForm } from "react-hook-form";
-
 
 const EmailLogin = ({ onLogin }) => {
     const {
@@ -10,11 +9,21 @@ const EmailLogin = ({ onLogin }) => {
         formState: { errors },
       } = useForm();
 
-    const onSubmit = handleSubmit(async (values) => {
-    signin(values)
-  });
+    const { signin, user, errors: signinErrors } = useAuth();
 
-    //   const { signin, isAuthenticated, errors: signinErrors } = useAuth();
+    const onSubmit = handleSubmit(async (values) => {
+        try {
+            await signin(values);
+            if (user) {
+                if (onLogin) {
+                    onLogin(user);
+                }
+            }
+        } catch (error) {
+            // handle error if needed
+        }
+    });
+
   return (
     <div className="space-y-4">
       <div className="bg-zinc-100 border-zinc-700 max-w-md w-full p-10 rounded-md">

@@ -1,5 +1,5 @@
 import React from 'react';
-// import { useAuth } from "../context/AuthContex";
+import { useAuth } from "../../context/AuthContext";
 import { useForm } from "react-hook-form";
 
 
@@ -10,11 +10,12 @@ const EmailLogin = ({ onLogin }) => {
         formState: { errors },
       } = useForm();
 
+    const { signup } = useAuth();
+
     const onSubmit = handleSubmit(async (values) => {
-    signin(values)
+    signup(values)
   });
 
-    //   const { signin, isAuthenticated, errors: signinErrors } = useAuth();
   return (
     <div className="space-y-4">
     <div className="bg-zinc-100 border-zinc-700 max-w-md w-full p-10 rounded-md">

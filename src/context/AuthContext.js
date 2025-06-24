@@ -18,9 +18,9 @@ export const AuthProvider = ({ children }) => {
     const [errors, setErrors] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    const signup = async (user) => {
+    const signin = async (user) => {
        try {
-         const res = await registerRequest(user);
+         const res = await loginRequest(user);
             console.log(res);
             setUser(res.data);
             setIsAuthenticated(true);
@@ -29,18 +29,22 @@ export const AuthProvider = ({ children }) => {
         }
         };
 
-    const signin = async (user) =>{
+    const  signup = async (user) =>{
         try {
-            const res = await loginRequest(user)  ;
+            const res = await registerRequest(user)  ;
             console.log(res);
             setIsAuthenticated(true);
             setUser(res.data);
         } catch (error) {
-            // console.log(error);
-            if(Array.isArray(error.response.data)){
+            console.error('Signin error:', error);
+            if(error.response && Array.isArray(error.response.data)){
                 return setErrors(error.response.data);
             }
-            setErrors([error.response.data.message]);
+            if(error.response && error.response.data && error.response.data.message){
+                setErrors([error.response.data.message]);
+            } else {
+                setErrors(['An unexpected error occurred during signin.']);
+            }
         }
     }
 
