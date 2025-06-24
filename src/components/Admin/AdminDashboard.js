@@ -10,8 +10,13 @@ import Topbar from './Topbar';
 import ApprovedProjectsChart from './ApprovedProjectsChart';
 import EconomicMovementChart from './EconomicMovementChart';
 import Projects from './Projects';
+import { useUsers } from '../../context/UserContext';
+import { useAuth } from '../../context/AuthContext';
 
 const AdminDashboard = () => {
+  const { users } = useUsers();
+  const { user: authUser } = useAuth();
+  const user = users.find(u => u.id === authUser?.id && u.role === 'admin');
   const [currentNav, setCurrentNav] = useState('Dashboard');
   const [showTypeManagerModal, setShowTypeManagerModal] = useState(false);
   const [showProjectFormModal, setShowProjectFormModal] = useState(false);

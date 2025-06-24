@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import AuthWrapper from './components/Auth/AuthWrapper';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import PartnerDashboard from './components/Partner/PartnerDashboard';
+import { UserProvider } from './context/UserContext';
+import { AuthProvider } from './context/AuthContext';
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -17,22 +19,32 @@ const App = () => {
     setView('auth');
   };
 
-  const renderView = () => {
-    switch(view) {
-      case 'admin':
-        return <AdminDashboard onLogout={handleLogout} />;
-      case 'partner':
-        return <PartnerDashboard partnerId={currentUser.id} onLogout={handleLogout} />;
-     
-      default:
-        return <AuthWrapper onLoginSuccess={handleLoginSuccess} onChangeView={setView} />;
+const renderView = () => {
+    if (!currentUser) {
+      return <AuthWrapper onLoginSuccess={handleLoginSuccess} onChangeView={setView} />;
     }
+    if (currentUser.role === 'admin') {
+      return <AdminDashboard onLogout={handleLogout} />;
+    }
+    if (currentUser.role === 'partner') {
+      return <PartnerDashboard partnerId={currentUser.id} onLogout={handleLogout} />;
+    }
+    // Fallback for unexpected roles
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p className="text-red-500">Rol de usuario no reconocido: {currentUser.role}</p>
+      </div>
+    );
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {renderView()}
-    </div>
+    <AuthProvider>
+      <UserProvider>
+        <div className="min-h-screen bg-gray-50">
+          {renderView()}
+        </div>
+      </UserProvider>
+    </AuthProvider>
   );
 };
 

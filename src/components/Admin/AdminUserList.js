@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
-import usersData from '../../mock/users';
+import React, { useEffect, useState } from 'react';
+import { useUsers } from '../../context/UserContext';
 
-const roles = ['Admin', 'Asociado', 'Viewer'];
+const roles = ['admin', 'partner', 'viewer'];
 
 const AdminUserList = () => {
-  const [users, setUsers] = useState(usersData);
+  const { users, getUsers, updateUser } = useUsers();
+  const [localUsers, setLocalUsers] = useState([]);
 
-  const handleRoleChange = (userId, newRole) => {
-    setUsers(prevUsers =>
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  useEffect(() => {
+    setLocalUsers(users);
+  }, [users]);
+
+  const handleRoleChange = async (userId, newRole) => {
+    await updateUser(userId, { role: newRole });
+    setLocalUsers(prevUsers =>
       prevUsers.map(user =>
         user.id === userId ? { ...user, role: newRole } : user
       )
@@ -26,7 +36,7 @@ const AdminUserList = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map(user => (
+          {localUsers.map(user => (
             <tr key={user.id} className="hover:bg-gray-50">
               <td className="border border-gray-300 px-4 py-2">{user.name}</td>
               <td className="border border-gray-300 px-4 py-2">{user.email}</td>

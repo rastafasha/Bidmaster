@@ -13,11 +13,9 @@ const EmailLogin = ({ onLogin }) => {
 
     const onSubmit = handleSubmit(async (values) => {
         try {
-            await signin(values);
-            if (user) {
-                if (onLogin) {
-                    onLogin(user);
-                }
+            const res = await signin(values);
+            if (res && onLogin) {
+                onLogin(res);
             }
         } catch (error) {
             // handle error if needed
