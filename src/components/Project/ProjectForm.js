@@ -1,57 +1,70 @@
 import React, { useState, useEffect } from 'react';
 // import projects from '../../mock/projects';
 import { useProjects } from '../../context/ProjectContext';
+import { useProjectTypes } from '../../context/ProjectTypeContext';
 import './StyleProjectform.css';
 
 const ProjectForm = ({ projectId, onSave, onCancel }) => {
   const { projects, getProject, getProjects, updateProject, createProject } = useProjects();
+  const { projectTypes, getProjectTypes } = useProjectTypes();
 
-  const [formData, setFormData] = useState({
-    name: '',
-    url: '',
-    urlPdf: null,
-    type: 'Construcción',
-    partners: [],
-    deliveryDate: new Date().toISOString().split('T')[0],
-    hasPresentation: false
-  });
+    const [formData, setFormData] = useState({
+      name: '',
+      url: '',
+      urlPdf: null,
+      type: projectTypes.length > 0 ? projectTypes[0]._id : '',
+      partners: [],
+      deliveryDate: new Date().toISOString().split('T')[0],
+      hasPresentation: false
+    });
 
   const [allPartners] = useState(['Constructora ABC', 'Arquitectos XYZ', 'Tech Solutions', 'AgroInnov', 'Estudio DEF']);
 
-  useEffect(() => {
-    if (projectId) {
-      const existingProject = projects.find(p => p.id === projectId);
-      console.log('existingProject', existingProject);
-      if (existingProject) {
-        setFormData({
-          ...existingProject,
-          id: existingProject.id,
-          urlPdf: null,
-          deliveryDate: existingProject.deliveryDate || new Date().toISOString().split('T')[0]
-        });
-      }
-    }
-  }, [projectId]);
-
-  const handleChange = (e) => {
-    const { name, value, type, checked, files } = e.target;
-    if (name === 'urlPdf' && files.length > 0) {
+  
+  // Function to load project data by id
+  const loadProjectData = (id) => {
+    const existingProject = projects.find(p => p._id === id);
+    if (existingProject) {
       setFormData({
-        ...formData,
-        urlPdf: files[0]
-      });
-    } else if (type === 'checkbox') {
-      setFormData({
-        ...formData,
-        [name]: checked
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value
+        ...existingProject,
+        id: existingProject._id,
+        urlPdf: null,
+        deliveryDate: existingProject.deliveryDate || new Date().toISOString().split('T')[0]
       });
     }
   };
+
+  useEffect(() => {
+    getProjectTypes();
+    if (projectId) {
+      loadProjectData(projectId);
+    }
+  }, [projectId, projects]);
+
+      const handleChange = (e) => {
+        const { name, value, type, checked, files } = e.target;
+        if (name === 'urlPdf' && files.length > 0) {
+          setFormData({
+            ...formData,
+            urlPdf: files[0]
+          });
+        } else if (type === 'checkbox') {
+          setFormData({
+            ...formData,
+            [name]: checked
+          });
+        } else if (name === 'type') {
+          setFormData({
+            ...formData,
+            type: value
+          });
+        } else {
+          setFormData({
+            ...formData,
+            [name]: value
+          });
+        }
+      };
 
   const handlePartnerToggle = (partner) => {
     setFormData(prev => ({
@@ -127,10 +140,12 @@ const ProjectForm = ({ projectId, onSave, onCancel }) => {
                 onChange={handleChange}
                 className="columns-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
               >
-                <option value="Construcción">Construcción</option>
-                <option value="Diseño Urbano">Diseño Urbano</option>
-                <option value="Tecnología">Tecnología</option>
-                <option value="Infraestructura">Infraestructura</option>
+                <option value="">Todos los tipos</option>
+                {projectTypes.map((type, index) => (
+                  <option key={index} value={type.name}>
+                    {type.name}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

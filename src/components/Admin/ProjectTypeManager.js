@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useProjectTypes } from '../../context/ProjectTypeContext';
 
 const ProjectTypeManager = () => {
-const { projectTypes, setProjectTypes, createProjectTypeRequest, deleteProjectTypeRequest, 
+const { projectTypes, setProjectTypes, createProjectType, deleteProjectType, 
     getProjectTypesRequest, 
     getProjectTypesUserRequest,
     getProjectTypeRequest,
-    updateProjectTypeRequest } = useProjectTypes();
+    updateProjectType } = useProjectTypes();
   // const [projectTypes, setProjectTypes] = useState([
   //   'Construcción',
   //   'Diseño Urbano',
@@ -17,17 +17,22 @@ const { projectTypes, setProjectTypes, createProjectTypeRequest, deleteProjectTy
   const [editIndex, setEditIndex] = useState(null);
   const [editValue, setEditValue] = useState('');
 
-  const handleAddType = () => {
+  const handleAddType = async () => {
     const trimmed = newType.trim();
-    if (trimmed && !projectTypes.includes(trimmed)) {
-      setProjectTypes([...projectTypes, trimmed]);
-      setNewType('');
+    if (trimmed && !projectTypes.some(pt => pt.name === trimmed)) {
+      try {
+        const created = await createProjectType({ name: trimmed });
+        setProjectTypes([...projectTypes, created]);
+        setNewType('');
+      } catch (error) {
+        console.error('Failed to create project type:', error);
+      }
     }
   };
 
   const handleEditClick = (index) => {
     setEditIndex(index);
-    setEditValue(projectTypes[index]);
+    setEditValue(projectTypes[index].name);
   };
 
   const handleEditChange = (e) => {
@@ -36,12 +41,19 @@ const { projectTypes, setProjectTypes, createProjectTypeRequest, deleteProjectTy
 
   const handleEditSave = () => {
     const trimmed = editValue.trim();
-    if (trimmed && !projectTypes.includes(trimmed)) {
+    if (trimmed && !projectTypes.some(pt => pt.name === trimmed)) {
       const updated = [...projectTypes];
-      updated[editIndex] = trimmed;
-      setProjectTypes(updated);
-      setEditIndex(null);
-      setEditValue('');
+      updated[editIndex] = { ...updated[editIndex], name: trimmed };
+      try {
+        updateProjectType(updated[editIndex]._id, { name: trimmed });
+        setProjectTypes(updated);
+        setEditIndex(null);
+        setEditValue('');
+        
+      } catch (error) {
+        console.error('Failed to update project type:', error);
+        
+      }
     }
   };
 
@@ -50,12 +62,18 @@ const { projectTypes, setProjectTypes, createProjectTypeRequest, deleteProjectTy
     setEditValue('');
   };
 
-  const handleDelete = (index) => {
-    const updated = projectTypes.filter((_, i) => i !== index);
-    setProjectTypes(updated);
-    if (editIndex === index) {
-      setEditIndex(null);
-      setEditValue('');
+  const handleDelete = async (index) => {
+    const idToDelete = projectTypes[index]._id;
+    try {
+      await deleteProjectType(idToDelete);
+      const updated = projectTypes.filter((_, i) => i !== index);
+      setProjectTypes(updated);
+      if (editIndex === index) {
+        setEditIndex(null);
+        setEditValue('');
+      }
+    } catch (error) {
+      console.error('Failed to delete project type:', error);
     }
   };
 
@@ -80,50 +98,50 @@ const { projectTypes, setProjectTypes, createProjectTypeRequest, deleteProjectTy
       </div>
 
       <ul>
-        {projectTypes.map((type, index) => (
-          <li key={index} className="flex items-center justify-between mb-2">
-            {editIndex === index ? (
-              <>
-                <input
-                  type="text"
-                  value={editValue}
-                  onChange={handleEditChange}
-                  className="flex-grow px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                />
+      {projectTypes.map((type, index) => (
+        <li key={index} className="flex items-center justify-between mb-2">
+          {editIndex === index ? (
+            <>
+              <input
+                type="text"
+                value={editValue}
+                onChange={handleEditChange}
+                className="flex-grow px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+              />
+              <button
+                onClick={handleEditSave}
+                className="ml-2 px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600"
+              >
+                Guardar
+              </button>
+              <button
+                onClick={handleEditCancel}
+                className="ml-2 px-3 py-1 bg-gray-300 rounded-lg hover:bg-gray-400"
+              >
+                Cancelar
+              </button>
+            </>
+          ) : (
+            <>
+              <span>{type.name}</span>
+              <div>
                 <button
-                  onClick={handleEditSave}
-                  className="ml-2 px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                  onClick={() => handleEditClick(index)}
+                  className="ml-2 px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                 >
-                  Guardar
+                  Editar
                 </button>
                 <button
-                  onClick={handleEditCancel}
-                  className="ml-2 px-3 py-1 bg-gray-300 rounded-lg hover:bg-gray-400"
+                  onClick={() => handleDelete(index)}
+                  className="ml-2 px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
                 >
-                  Cancelar
+                  Eliminar
                 </button>
-              </>
-            ) : (
-              <>
-                <span>{type}</span>
-                <div>
-                  <button
-                    onClick={() => handleEditClick(index)}
-                    className="ml-2 px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                  >
-                    Editar
-                  </button>
-                  <button
-                    onClick={() => handleDelete(index)}
-                    className="ml-2 px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                  >
-                    Eliminar
-                  </button>
-                </div>
-              </>
-            )}
-          </li>
-        ))}
+              </div>
+            </>
+          )}
+        </li>
+      ))}
       </ul>
     </div>
   );

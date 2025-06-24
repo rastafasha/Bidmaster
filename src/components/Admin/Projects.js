@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ProjectCard from '../ProjectCard';
 import ProjectForm from '../Project/ProjectForm';
+import { useProjectTypes } from '../../context/ProjectTypeContext';
 // import projects from '../../mock/projects';
 
 import { useProjects } from '../../context/ProjectContext';
@@ -12,6 +13,16 @@ const Projects = () => {
   const [filterType, setFilterType] = useState('');
   const [showProjectFormModal, setShowProjectFormModal] = useState(false);
   const [currentProjectId, setCurrentProjectId] = useState(null);
+  const { projectTypes, getProjectTypes } = useProjectTypes();
+
+  useEffect(() => {
+    getProjects();
+    getProjectTypes();
+  }, []);
+
+  useEffect(() => {
+    setProjectData(projects);
+  }, [projects]);
 
   useEffect(() => {
     if (searchTerm || filterType) {
@@ -20,11 +31,11 @@ const Projects = () => {
         const matchesType = filterType ? project.type === filterType : true;
         return matchesSearch && matchesType;
       });
-      getProjects(filtered);
+      setProjectData(filtered);
     } else {
-      getProjects(projects);
+      setProjectData(projects);
     }
-  }, [searchTerm, filterType]);
+  }, [searchTerm, filterType, projects]);
 
   const handleNewProject = () => {
     setCurrentProjectId(null);
@@ -89,25 +100,28 @@ const Projects = () => {
           />
         </div>
         <div>
+          
           <select
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
-          >
-            <option value="">Todos los tipos</option>
-            <option value="Construcción">Construcción</option>
-            <option value="Diseño Urbano">Diseño Urbano</option>
-            <option value="Tecnología">Tecnología</option>
-            <option value="Infraestructura">Infraestructura</option>
-          </select>
+                name="type"
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                className="columns-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+              >
+                <option value="">Todos los tipos</option>
+                {projectTypes.map((type, index) => (
+                  <option key={index} value={type.name}>
+                    {type.name}
+                  </option>
+                ))}
+              </select>
         </div>
       </div>
 
       {projectData.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projectData.filter(Boolean).map(project => (
+          {projectData.filter(Boolean).map((project, index) => (
             <ProjectCard
-              key={project.id}
+              key={project.id || project._id || index}
               project={project}
               onTogglePresentation={() => {}}
               showAdminControls={true}

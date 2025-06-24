@@ -23,7 +23,7 @@ export function ProjectTypeProvider({ children }) {
        try {
         const res = await getProjectTypesRequest();
         setProjectTypes(res.data)
-        console.log(res);
+        // console.log(res);
        } catch (error) {
             console.log(error);
        }
@@ -43,16 +43,22 @@ export function ProjectTypeProvider({ children }) {
        
     }
 
-    const createProjectType = async (task) =>{
-        const res = await createProjectTypeRequest(task);
-        console.log(res);
+    const createProjectType = async (projectType) =>{
+        try {
+            const res = await createProjectTypeRequest(projectType);
+            console.log(res);
+            return res.data; // Return created projectType data
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
     }
 
     const deleteProjectType = async(id)=>{
       try {
         const res =  await deleteProjectTypeRequest(id);
         console.log(res);
-        if(res.status === 204) setProjectTypes(tasks.filter(task => task._id !== id))
+        if(res.status === 204) setProjectTypes(projectTypes.filter(projectType => projectType._id !== id))
 
       } catch (error) {
         console.log(error);
@@ -68,9 +74,9 @@ export function ProjectTypeProvider({ children }) {
         }
     }
 
-    const updateProjectType = async (id, task) =>{
+    const updateProjectType = async (id, projectType) =>{
         try {
-            const res = await updateProjectTypeRequest(id, task);
+            const res = await updateProjectTypeRequest(id, projectType);
             console.log(res);
         } catch (error) {
             console.log(error);

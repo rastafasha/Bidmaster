@@ -57,7 +57,7 @@ const ProjectCard = ({ project, onTogglePresentation, showAdminControls, onEdit,
         
         <div className="mt-4 flex justify-between items-center">
           <button
-            onClick={() => onTogglePresentation(project.id)}
+            onClick={() => onTogglePresentation(project._id)}
             className={`px-4 py-2 rounded-md ${project.hasPresentation ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
           >
             {project.hasPresentation ? 'Presentación lista' : 'Falta presentación'}
@@ -66,7 +66,10 @@ const ProjectCard = ({ project, onTogglePresentation, showAdminControls, onEdit,
           {showAdminControls && (
             <div className="flex space-x-2">
               <button 
-                onClick={() => onEdit(project.id)}
+                onClick={() => {
+                  // console.log('Edit project:', project);
+                  onEdit(project._id);
+                }}
                 className="p-2 text-blue-500 hover:text-blue-700"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,7 +77,7 @@ const ProjectCard = ({ project, onTogglePresentation, showAdminControls, onEdit,
                 </svg>
               </button>
               <button 
-                onClick={() => onDelete(project.id)}
+                onClick={() => onDelete(project._id)}
                 className="p-2 text-red-500 hover:text-red-700"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

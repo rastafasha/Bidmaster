@@ -13,6 +13,7 @@ import Projects from './Projects';
 import { useUsers } from '../../context/UserContext';
 import { useAuth } from '../../context/AuthContext';
 import { useProjects } from '../../context/ProjectContext';
+import { useProjectTypes } from '../../context/ProjectTypeContext';
 
 const AdminDashboard = () => {
   const { users } = useUsers();
@@ -24,6 +25,7 @@ const AdminDashboard = () => {
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const [showUserList, setShowUserList] = useState(false);
   const [currentProjectId, setCurrentProjectId] = useState(null);
+  const { projectTypes, getProjectTypes } = useProjectTypes();
   
 const { projects, getProject, getProjects, createProject, updateProject } = useProjects();
   const [projectData, setProjectData] = useState(projects);
@@ -54,6 +56,7 @@ const { projects, getProject, getProjects, createProject, updateProject } = useP
   };
 
   useEffect(() => {
+    getProjectTypes();
     if (searchTerm || filterType) {
       const filtered = projects.filter(project => {
         const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -236,16 +239,18 @@ const { projects, getProject, getProjects, createProject, updateProject } = useP
                 </div>
                 <div>
                   <select
-                    value={filterType}
-                    onChange={(e) => setFilterType(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
-                  >
-                    <option value="">Todos los tipos</option>
-                    <option value="Construcción">Construcción</option>
-                    <option value="Diseño Urbano">Diseño Urbano</option>
-                    <option value="Tecnología">Tecnología</option>
-                    <option value="Infraestructura">Infraestructura</option>
-                  </select>
+                name="type"
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                className="columns-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+              >
+                <option value="">Todos los tipos</option>
+                {projectTypes.map((type, index) => (
+                  <option key={index} value={type.name}>
+                    {type.name}
+                  </option>
+                ))}
+              </select>
                 </div>
               </div>
 

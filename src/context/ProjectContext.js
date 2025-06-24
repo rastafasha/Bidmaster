@@ -69,7 +69,7 @@ export function ProjectProvider({ children }) {
     const getProject = async(id)=>{
         try {
             const res = await getProjectRequest(id);
-            console.log(res);
+            // console.log(res);
             return res.data;
         } catch (error) {
             console.log(error);
