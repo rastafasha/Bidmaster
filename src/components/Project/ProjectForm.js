@@ -29,7 +29,9 @@ const ProjectForm = ({ projectId, onSave, onCancel }) => {
         ...existingProject,
         id: existingProject._id,
         urlPdf: null,
-        deliveryDate: existingProject.deliveryDate || new Date().toISOString().split('T')[0]
+        deliveryDate: existingProject.deliveryDate || new Date().toISOString().split('T')[0],
+        partners: existingProject.partners || [],
+        hasPresentation: existingProject.hasPresentation === true || existingProject.hasPresentation === 'true'
       });
     }
   };

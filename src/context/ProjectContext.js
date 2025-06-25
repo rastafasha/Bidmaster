@@ -58,7 +58,7 @@ export function ProjectProvider({ children }) {
     const deleteProject = async(id)=>{
       try {
         const res =  await deleteProjectRequest(id);
-        console.log(res);
+        // console.log(res);
         if(res.status === 204) setProjects(tasks.filter(task => task._id !== id))
 
       } catch (error) {

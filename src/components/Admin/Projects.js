@@ -7,7 +7,7 @@ import { useProjectTypes } from '../../context/ProjectTypeContext';
 import { useProjects } from '../../context/ProjectContext';
 
 const Projects = () => {
-  const { projects, getProjects,  getProject, updateProject, createProject } = useProjects();
+  const { projects, getProjects,  getProject, updateProject, createProject, deleteProject } = useProjects();
   const [projectData, setProjectData] = useState(projects);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('');
@@ -65,11 +65,18 @@ const Projects = () => {
         console.error('Error creating project:', error);
       }
     }
+    await getProjects();
     setShowProjectFormModal(false);
   };
 
-  const handleDeleteProject = (id) => {
-    setProjectData(prev => prev.filter(p => p.id !== id));
+
+  const handleDeleteProject = async (id) => {
+    try {
+      await deleteProject(id);
+      setProjectData(prev => prev.filter(p => p._id !== id));
+    } catch (error) {
+      console.error('Failed to delete project:', error);
+    }
   };
 
   const closeOnOverlayClick = (e, closeFunc) => {
@@ -125,8 +132,8 @@ const Projects = () => {
               project={project}
               onTogglePresentation={() => {}}
               showAdminControls={true}
-              onEdit={() => handleEditProject(project.id)}
-              onDelete={() => handleDeleteProject(project.id)}
+              onEdit={() => handleEditProject(project._id)}
+              onDelete={() => handleDeleteProject(project._id)}
             />
           ))}
         </div>
@@ -152,7 +159,10 @@ const Projects = () => {
             <ProjectForm
               projectId={currentProjectId}
               onSave={handleSaveProject}
-              onCancel={() => setShowProjectFormModal(false)}
+              onCancel={async () => {
+                setShowProjectFormModal(false);
+                await getProjects();
+              }}
             />
           </div>
         </div>

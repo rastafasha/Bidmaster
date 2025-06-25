@@ -38,7 +38,7 @@ const AdminUserList = () => {
         <tbody>
           {localUsers.map(user => (
             <tr key={user.id} className="hover:bg-gray-50">
-              <td className="border border-gray-300 px-4 py-2">{user.name}</td>
+              <td className="border border-gray-300 px-4 py-2">{user.username}</td>
               <td className="border border-gray-300 px-4 py-2">{user.email}</td>
               <td className="border border-gray-300 px-4 py-2">
                 <select
