@@ -8,12 +8,17 @@ import UserProfileForm from '../UserProfileForm';
 import SidebarPartner from './SidebarPartner';
 import TopbarPartner from './TopbarPartner';
 import Calendar from '../Project/Calendar';
+import { useAuth } from '../../context/AuthContext';
 
 const PartnerDashboard = ({ partnerId, onLogout }) => {
+  const { users } = useUsers();
+  const { user: authUser } = useAuth();
   const { projects, getProject, getProjects, updateProject, createProject } = useProjects();
-  const { users, getUsers, updateUser } = useUsers();
-  const partner = users.find(u => u.id === partnerId && u.role === 'partner');
-  const [showUserProfileModal, setShowUserProfileModal] = useState(false);
+  // const { users, getUsers, updateUser } = useUsers();
+  // const partner = users.find(u => u.id === partnerId && u.role === 'partner');
+   const partner = users.find(u => u.id === authUser?.id && u.role === 'partner');
+  
+   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const [currentNav, setCurrentNav] = useState('Dashboard');
   const [showUserList, setShowUserList] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);

@@ -22,7 +22,7 @@ export function UserProvider({ children }) {
        try {
         const res = await getUsersRequest();
         setUsers(res.data)
-        console.log(res);
+        // console.log(res);
        } catch (error) {
             console.log(error);
        }

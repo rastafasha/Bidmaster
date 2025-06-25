@@ -67,7 +67,6 @@ const ProjectCard = ({ project, onTogglePresentation, showAdminControls, onEdit,
             <div className="flex space-x-2">
               <button 
                 onClick={() => {
-                  // console.log('Edit project:', project);
                   onEdit(project._id);
                 }}
                 className="p-2 text-blue-500 hover:text-blue-700"

@@ -16,7 +16,7 @@ import { useProjects } from '../../context/ProjectContext';
 import { useProjectTypes } from '../../context/ProjectTypeContext';
 
 const AdminDashboard = () => {
-  const { users } = useUsers();
+  const { users, updateUser } = useUsers();
   const { user: authUser } = useAuth();
   const user = users.find(u => u.id === authUser?.id && u.role === 'admin');
   const [currentNav, setCurrentNav] = useState('Dashboard');
@@ -55,8 +55,10 @@ const { projects, getProject, getProjects, createProject, updateProject } = useP
     ]
   };
 
+
   useEffect(() => {
     getProjectTypes();
+    // console.log(authUser);
     if (searchTerm || filterType) {
       const filtered = projects.filter(project => {
         const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -329,9 +331,10 @@ const { projects, getProject, getProjects, createProject, updateProject } = useP
                   &#x2715;
                 </button>
                 <UserProfileForm
-                  initialData={loggedInUserProfile}
+                  initialData={authUser || loggedInUserProfile}
                   onSave={(data) => {
                     console.log('User profile saved:', data);
+                    updateUser(data._id, data);
                     setShowUserProfileModal(false);
                   }}
                   onCancel={() => setShowUserProfileModal(false)}

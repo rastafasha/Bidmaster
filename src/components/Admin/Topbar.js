@@ -1,6 +1,14 @@
 import React from 'react';
+import { useProjectTypes } from '../../context/ProjectTypeContext';
 
 const Topbar = ({ searchTerm, setSearchTerm }) => {
+  const { projectTypes, getProjectTypes } = useProjectTypes();
+
+
+   useEffect(() => {
+      getProjectTypes();
+    }, []);
+
   return (
     <header className="flex items-center justify-between h-16 px-6 bg-white border-b border-gray-200">
       <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
@@ -14,17 +22,20 @@ const Topbar = ({ searchTerm, setSearchTerm }) => {
                   />
                 </div>
                 <div>
+
                   <select
-                    value={filterType}
-                    onChange={(e) => setFilterType(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
-                  >
-                    <option value="">Todos los tipos</option>
-                    <option value="Construcción">Construcción</option>
-                    <option value="Diseño Urbano">Diseño Urbano</option>
-                    <option value="Tecnología">Tecnología</option>
-                    <option value="Infraestructura">Infraestructura</option>
-                  </select>
+                name="type"
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                className="columns-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+              >
+                <option value="">Todos los tipos</option>
+                {projectTypes.map((type, index) => (
+                  <option key={index} value={type.name}>
+                    {type.name}
+                  </option>
+                ))}
+              </select>
                 </div>
               </div>
       <div className="flex items-center space-x-4">
