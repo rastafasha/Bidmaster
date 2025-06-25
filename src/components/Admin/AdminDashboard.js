@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ProjectCard from '../ProjectCard';
 import ProjectForm from '../Project/ProjectForm';
-import projects from '../../mock/projects';
+// import projects from '../../mock/projects';
 import ProjectTypeManager from './ProjectTypeManager';
 import UserProfileForm from '../UserProfileForm';
 import AdminUserList from './AdminUserList';
@@ -10,17 +10,28 @@ import Topbar from './Topbar';
 import ApprovedProjectsChart from './ApprovedProjectsChart';
 import EconomicMovementChart from './EconomicMovementChart';
 import Projects from './Projects';
+import { useUsers } from '../../context/UserContext';
+import { useAuth } from '../../context/AuthContext';
+import { useProjects } from '../../context/ProjectContext';
+import { useProjectTypes } from '../../context/ProjectTypeContext';
 
 const AdminDashboard = () => {
+  const { users } = useUsers();
+  const { user: authUser } = useAuth();
+  const user = users.find(u => u.id === authUser?.id && u.role === 'admin');
   const [currentNav, setCurrentNav] = useState('Dashboard');
   const [showTypeManagerModal, setShowTypeManagerModal] = useState(false);
   const [showProjectFormModal, setShowProjectFormModal] = useState(false);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const [showUserList, setShowUserList] = useState(false);
   const [currentProjectId, setCurrentProjectId] = useState(null);
+  const { projectTypes, getProjectTypes } = useProjectTypes();
+  
+const { projects, getProject, getProjects, createProject, updateProject } = useProjects();
   const [projectData, setProjectData] = useState(projects);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('');
+  const [isOpen, setIsOpen] = useState(true); 
 
   const onLogout = () => {
     // Implement your logout logic here, e.g., clearing auth tokens, redirecting, etc.
@@ -45,15 +56,16 @@ const AdminDashboard = () => {
   };
 
   useEffect(() => {
+    getProjectTypes();
     if (searchTerm || filterType) {
       const filtered = projects.filter(project => {
         const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesType = filterType ? project.type === filterType : true;
         return matchesSearch && matchesType;
       });
-      setProjectData(filtered);
+      getProjects(filtered);
     } else {
-      setProjectData(projects);
+      getProjects(projects);
     }
   }, [searchTerm, filterType]);
 
@@ -67,14 +79,23 @@ const AdminDashboard = () => {
     setShowProjectFormModal(true);
   };
 
-  const handleSaveProject = (project) => {
+  const handleSaveProject = async (project) => {
     if (currentProjectId) {
-      setProjectData(prev => 
-        prev.map(p => p.id === currentProjectId ? { ...project, id: currentProjectId } : p)
-      );
+      try {
+        await updateProject(currentProjectId, project);
+        setProjectData(prev => 
+          prev.map(p => p.id === currentProjectId ? { ...project, id: currentProjectId } : p)
+        );
+      } catch (error) {
+        console.error('Error updating project:', error);
+      }
     } else {
-      const newId = Math.max(...projectData.map(p => p.id)) + 1;
-      setProjectData(prev => [...prev, { ...project, id: newId }]);
+      try {
+        const newProject = await createProject(project);
+        setProjectData(prev => [...prev, newProject]);
+      } catch (error) {
+        console.error('Error creating project:', error);
+      }
     }
     setShowProjectFormModal(false);
   };
@@ -107,6 +128,8 @@ const AdminDashboard = () => {
           setCurrentNav('Team');
         }}
         onLogout={onLogout}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
       />
 
       {/* Main content */}
@@ -114,30 +137,30 @@ const AdminDashboard = () => {
         {/* Top bar */}
 
         <header className="flex items-center justify-between h-16 px-6 bg-white border-b border-gray-200">
-          <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
-                <div className="md:col-span-2">
-                  <input
-                    type="text"
-                    placeholder="Buscar por nombre..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <select
-                    value={filterType}
-                    onChange={(e) => setFilterType(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
-                  >
-                    <option value="">Todos los tipos</option>
-                    <option value="Construcción">Construcción</option>
-                    <option value="Diseño Urbano">Diseño Urbano</option>
-                    <option value="Tecnología">Tecnología</option>
-                    <option value="Infraestructura">Infraestructura</option>
-                  </select>
-                </div>
-              </div>
+          
+          <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="p-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-white"
+          aria-label="Toggle sidebar"
+        >
+          <svg
+            className="h-6 w-6 text-indigo-100"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            viewBox="0 0 24 24"
+          >
+            {isOpen ? (
+              <path d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
+          
+          <span className="ml-4">BidMaster</span>
           <div className="flex items-center space-x-4">
             <button className="p-2 rounded-full hover:bg-gray-100">
               <svg className="h-6 w-6 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
@@ -202,6 +225,33 @@ const AdminDashboard = () => {
                   { category: 'Inversiones', value: 10000 },
                   { category: 'Otros', value: 5000 },
                 ]} />
+              </div>
+
+              <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
+                <div className="md:col-span-2">
+                  <input
+                    type="text"
+                    placeholder="Buscar por nombre..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <select
+                name="type"
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                className="columns-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+              >
+                <option value="">Todos los tipos</option>
+                {projectTypes.map((type, index) => (
+                  <option key={index} value={type.name}>
+                    {type.name}
+                  </option>
+                ))}
+              </select>
+                </div>
               </div>
 
               {projectData.length > 0 ? (

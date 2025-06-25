@@ -1,14 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import ProjectCard from '../ProjectCard';
 import ProjectForm from '../Project/ProjectForm';
-import projects from '../../mock/projects';
+import { useProjectTypes } from '../../context/ProjectTypeContext';
+// import projects from '../../mock/projects';
+
+import { useProjects } from '../../context/ProjectContext';
 
 const Projects = () => {
+  const { projects, getProjects,  getProject, updateProject, createProject, deleteProject } = useProjects();
   const [projectData, setProjectData] = useState(projects);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('');
   const [showProjectFormModal, setShowProjectFormModal] = useState(false);
   const [currentProjectId, setCurrentProjectId] = useState(null);
+  const { projectTypes, getProjectTypes } = useProjectTypes();
+
+  useEffect(() => {
+    getProjects();
+    getProjectTypes();
+  }, []);
+
+  useEffect(() => {
+    setProjectData(projects);
+  }, [projects]);
 
   useEffect(() => {
     if (searchTerm || filterType) {
@@ -21,7 +35,7 @@ const Projects = () => {
     } else {
       setProjectData(projects);
     }
-  }, [searchTerm, filterType]);
+  }, [searchTerm, filterType, projects]);
 
   const handleNewProject = () => {
     setCurrentProjectId(null);
@@ -33,20 +47,36 @@ const Projects = () => {
     setShowProjectFormModal(true);
   };
 
-  const handleSaveProject = (project) => {
+  const handleSaveProject = async (project) => {
     if (currentProjectId) {
-      setProjectData(prev => 
-        prev.map(p => p.id === currentProjectId ? { ...project, id: currentProjectId } : p)
-      );
+      try {
+        await updateProject(currentProjectId, project);
+        setProjectData(prev => 
+          prev.map(p => p.id === currentProjectId ? { ...project, id: currentProjectId } : p)
+        );
+      } catch (error) {
+        console.error('Error updating project:', error);
+      }
     } else {
-      const newId = Math.max(...projectData.map(p => p.id)) + 1;
-      setProjectData(prev => [...prev, { ...project, id: newId }]);
+      try {
+        const newProject = await createProject(project);
+        setProjectData(prev => [...prev, newProject]);
+      } catch (error) {
+        console.error('Error creating project:', error);
+      }
     }
+    await getProjects();
     setShowProjectFormModal(false);
   };
 
-  const handleDeleteProject = (id) => {
-    setProjectData(prev => prev.filter(p => p.id !== id));
+
+  const handleDeleteProject = async (id) => {
+    try {
+      await deleteProject(id);
+      setProjectData(prev => prev.filter(p => p._id !== id));
+    } catch (error) {
+      console.error('Failed to delete project:', error);
+    }
   };
 
   const closeOnOverlayClick = (e, closeFunc) => {
@@ -56,7 +86,7 @@ const Projects = () => {
   };
 
   return (
-    <div className="p-6 overflow-y-auto">
+    <div className="p-6  ">
       <div className="mb-8 flex justify-end items-center">
         <button
           onClick={handleNewProject}
@@ -77,30 +107,33 @@ const Projects = () => {
           />
         </div>
         <div>
+          
           <select
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
-          >
-            <option value="">Todos los tipos</option>
-            <option value="Construcción">Construcción</option>
-            <option value="Diseño Urbano">Diseño Urbano</option>
-            <option value="Tecnología">Tecnología</option>
-            <option value="Infraestructura">Infraestructura</option>
-          </select>
+                name="type"
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                className="columns-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+              >
+                <option value="">Todos los tipos</option>
+                {projectTypes.map((type, index) => (
+                  <option key={index} value={type.name}>
+                    {type.name}
+                  </option>
+                ))}
+              </select>
         </div>
       </div>
 
       {projectData.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projectData.map(project => (
+          {projectData.filter(Boolean).map((project, index) => (
             <ProjectCard
-              key={project.id}
+              key={project.id || project._id || index}
               project={project}
               onTogglePresentation={() => {}}
               showAdminControls={true}
-              onEdit={() => handleEditProject(project.id)}
-              onDelete={() => handleDeleteProject(project.id)}
+              onEdit={() => handleEditProject(project._id)}
+              onDelete={() => handleDeleteProject(project._id)}
             />
           ))}
         </div>
@@ -112,10 +145,10 @@ const Projects = () => {
 
       {showProjectFormModal && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start overflow-y-auto z-50 p-4 sm:p-6 min-h-screen"
           onClick={(e) => closeOnOverlayClick(e, () => setShowProjectFormModal(false))}
         >
-          <div className="bg-white rounded-lg shadow-lg p-6 max-w-4xl w-full relative">
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-4xl w-full relative max-h-[90vh] overflow-y-auto max-h-screen">
             <button
               onClick={() => setShowProjectFormModal(false)}
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
@@ -126,7 +159,10 @@ const Projects = () => {
             <ProjectForm
               projectId={currentProjectId}
               onSave={handleSaveProject}
-              onCancel={() => setShowProjectFormModal(false)}
+              onCancel={async () => {
+                setShowProjectFormModal(false);
+                await getProjects();
+              }}
             />
           </div>
         </div>

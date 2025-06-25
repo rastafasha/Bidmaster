@@ -1,7 +1,7 @@
 const users = [
   {
     id: 1,
-    name: "Admin Master",
+    username: "Admin Master",
     email: "admin@bidmaster.com",
     phone: "+1234567890",
     role: "admin",
@@ -10,7 +10,7 @@ const users = [
   },
   {
     id: 2,
-    name: "Asociado Uno",
+    username: "Asociado Uno",
     email: "asociado1@empresa.com",
     phone: "+1987654321",
     role: "partner",
@@ -20,7 +20,7 @@ const users = [
   },
   {
     id: 3,
-    name: "Asociado Dos",
+    username: "Asociado Dos",
     email: "asociado2@empresa.com",
     phone: "+1122334455",
     role: "partner", 

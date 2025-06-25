@@ -1,0 +1,102 @@
+import { createContext, useContext, useState } from "react";
+import {createProjectTypeRequest, deleteProjectTypeRequest, 
+    getProjectTypesRequest, 
+    getProjectTypesUserRequest,
+    getProjectTypeRequest,
+    updateProjectTypeRequest
+} from '../api/projectTypes';
+
+const ProjectTypeContext = createContext();
+
+export const useProjectTypes = () => {
+    const context = useContext(ProjectTypeContext);
+    if (!context) {
+        throw new Error('useTask must be used within an ProjectTypeProvider');
+    }
+    return context; // Ensure the context is returned
+};
+
+export function ProjectTypeProvider({ children }) {
+    const [projectTypes, setProjectTypes] = useState([]);
+    
+    const getProjectTypes = async () =>{
+       try {
+        const res = await getProjectTypesRequest();
+        setProjectTypes(res.data)
+        // console.log(res);
+       } catch (error) {
+            console.log(error);
+       }
+       
+    }
+    const getProjectTypesByUSer = async (id) =>{
+       try {
+        const res = await getProjectTypesUserRequest(id);
+        console.log(res);
+        setProjectTypes(res.data)
+       } catch (error) {
+            if(error.status === 400){
+                return error.message
+            }
+            console.log(error);
+       }
+       
+    }
+
+    const createProjectType = async (projectType) =>{
+        try {
+            const res = await createProjectTypeRequest(projectType);
+            console.log(res);
+            return res.data; // Return created projectType data
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    const deleteProjectType = async(id)=>{
+      try {
+        const res =  await deleteProjectTypeRequest(id);
+        console.log(res);
+        if(res.status === 204) setProjectTypes(projectTypes.filter(projectType => projectType._id !== id))
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    const getProjectType = async(id)=>{
+        try {
+            const res = await getProjectTypeRequest(id);
+            return res.data;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const updateProjectType = async (id, projectType) =>{
+        try {
+            const res = await updateProjectTypeRequest(id, projectType);
+            console.log(res);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    return (
+        <ProjectTypeContext.Provider value={{
+            projectTypes,
+            setProjectTypes,
+            createProjectType,
+            getProjectTypes,
+            getProjectTypesByUSer,
+            deleteProjectType,
+            getProjectType,
+            updateProjectType
+            
+            
+        }}>
+            {children}
+        </ProjectTypeContext.Provider>
+    )
+}

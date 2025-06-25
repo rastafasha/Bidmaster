@@ -114,10 +114,10 @@
     "lang": "es-MX",
    "name": "BidMaster PWA",
     "short_name": "BidMaster",
-  "orientation": "portrait",
-  "prefer_related_application": false,
-  "scope": "/",
-  "start_url": "/",
-  "theme_color": "orange"
+    "orientation": "portrait",
+    "prefer_related_application": false,
+    "scope": "/",
+    "start_url": "/",
+    "theme_color": "orange"
   }
   
